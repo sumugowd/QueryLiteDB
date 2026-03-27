@@ -1,35 +1,28 @@
 #include <iostream>
-#include "include/Database.h"
-#include "include/FileManager.h"
+#include "include/Tokenizer.h"
+#include "include/QueryParser.h"
+#include "include/InsertQuery.h"
 
 using namespace std;
 
 int main() {
-    Database db;
+    string queryStr = "INSERT INTO students VALUES(1, Sumu, 22)";
 
-    vector<Column> columns = {
-        Column("id", "INT"),
-        Column("name", "STRING"),
-        Column("age", "INT")
-    };
+    vector<string> tokens = Tokenizer::tokenize(queryStr);
 
-    db.createTable("students", columns);
+    Query* q = QueryParser::parse(tokens);
 
-    Table* students = db.getTable("students");
+    if(q && q->type == "INSERT"){
+        InsertQuery* iq = (InsertQuery*)q;
 
-    if(students != nullptr){
-        students->insertRow(Row({"1", "Sumu", "22"}));
-        students->insertRow(Row({"2", "Ravi", "23"}));
+        cout << "Table: " << iq->tableName << endl;
+        cout << "Values: ";
 
-        // SAVE to file
-        FileManager::saveTable(*students);
+        for(string v : iq->values){
+            cout << v << " ";
+        }
+        cout << endl;
     }
-    
-    cout << "\nReloading from file...\n" << endl;
-
-    // LOAD from file
-    Table loadedTable = FileManager::loadTable("students");
-    loadedTable.displayTable();
     
     return 0;
 }
