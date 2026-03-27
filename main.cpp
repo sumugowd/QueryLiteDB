@@ -1,28 +1,48 @@
 #include <iostream>
+#include "include/Database.h"
 #include "include/Tokenizer.h"
 #include "include/QueryParser.h"
-#include "include/InsertQuery.h"
+#include "include/QueryExecutor.h"
 
 using namespace std;
 
 int main() {
-    string queryStr = "INSERT INTO students VALUES(1, Sumu, 22)";
+    Database db;
 
-    vector<string> tokens = Tokenizer::tokenize(queryStr);
+    // Create table manually (for now)
+    vector<Column> columns = {
+        Column("id", "INT"),
+        Column("name", "STRIMG"),
+        Column("age", "INT")
+    };
 
-    Query* q = QueryParser::parse(tokens);
+    db.createTable("students",columns);
 
-    if(q && q->type == "INSERT"){
-        InsertQuery* iq = (InsertQuery*)q;
+    QueryExecutor executor(db);
 
-        cout << "Table: " << iq->tableName << endl;
-        cout << "Values: ";
+    while(true) {
+        cout << "\nEnter Query (or type EXIT): ";
+        string queryStr;
+        getline(cin, queryStr);
 
-        for(string v : iq->values){
-            cout << v << " ";
+        if(queryStr == "EXIT") break;
+
+        // step 1: Tokenize
+        vector<string> tokens = Tokenizer::tokenize(queryStr);
+
+        // step 2: Parse
+        Query* query = QueryParser::parse(tokens);
+
+        // step 3: Execute
+        executor.execute(query);
+
+        // Optimal: show table after each query
+        Table* table = db.getTable("students");
+        if(table){
+            cout << "\nCurrent Table:\n";
+            table->displayTable();
         }
-        cout << endl;
     }
-    
+
     return 0;
 }
