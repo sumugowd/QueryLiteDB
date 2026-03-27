@@ -1,15 +1,12 @@
 #include <iostream>
-#include "include/Table.h"
 #include "include/Database.h"
+#include "include/FileManager.h"
 
 using namespace std;
 
 int main() {
-    cout << "Testing Table..." << endl;
-
     Database db;
 
-    // Create table
     vector<Column> columns = {
         Column("id", "INT"),
         Column("name", "STRING"),
@@ -18,17 +15,21 @@ int main() {
 
     db.createTable("students", columns);
 
-    // show tables
-    db.showTables();
-
-    // Insert into table
     Table* students = db.getTable("students");
+
     if(students != nullptr){
         students->insertRow(Row({"1", "Sumu", "22"}));
         students->insertRow(Row({"2", "Ravi", "23"}));
 
-        students->displayTable();
+        // SAVE to file
+        FileManager::saveTable(*students);
     }
+    
+    cout << "\nReloading from file...\n" << endl;
+
+    // LOAD from file
+    Table loadedTable = FileManager::loadTable("students");
+    loadedTable.displayTable();
     
     return 0;
 }

@@ -47,3 +47,11 @@ int Table::getColumnIndex(string columnName) const{
     }
     return -1;
 }
+
+vector<Column> Table::getColumns() const{
+    return columns;
+}
+
+vector<Row> Table::getRows() const {
+    return rows;
+}

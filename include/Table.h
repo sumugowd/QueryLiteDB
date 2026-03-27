@@ -24,6 +24,9 @@ class Table{
         void displayTable() const;
 
         int getColumnIndex(string columnName) const;
+
+        vector<Column> getColumns() const;
+        vector<Row> getRows() const;
 };
 
 #endif
