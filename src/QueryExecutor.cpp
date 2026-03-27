@@ -1,6 +1,7 @@
 #include "../include/QueryExecutor.h"
 #include "../include/InsertQuery.h"
 #include "../include/FileManager.h"
+#include "../include/SelectQuery.h"
 #include <iostream>
 
 QueryExecutor::QueryExecutor(Database& database) : db(database){}
@@ -24,6 +25,17 @@ void QueryExecutor::execute(Query* query) {
         FileManager::saveTable(*table);
 
         std::cout << "Insert successful!" << std::endl;
+
+    }
+    // Handle SELECT
+    else if(query->type == "SELECT"){
+        SelectQuery* sq = (SelectQuery*)query;
+
+        Table* table = db.getTable(sq->tableName);
+        if(!table) return;
+
+        table->displayTable();
+        
     }else{
         std::cout << "Query type not supported yet!" << std::endl;
     }

@@ -1,10 +1,12 @@
 #include "../include/QueryParser.h"
 #include "../include/InsertQuery.h"
+#include "../include/SelectQuery.h"
 #include <iostream>
 
 Query* QueryParser::parse(const vector<string>& tokens){
     if(tokens.empty()) return nullptr;
 
+    // Insert
     if(tokens[0] == "INSERT"){
         InsertQuery* query = new InsertQuery();
 
@@ -19,6 +21,15 @@ Query* QueryParser::parse(const vector<string>& tokens){
         return query;
     }
 
+    // Select
+    else if(tokens[0] == "SELECT"){
+        SelectQuery* query = new SelectQuery();
+
+        // SELECT * FROM table
+        query->tableName = tokens[3];
+
+        return query;
+    }
     cout << "Unsupported query type!" << endl;
     return nullptr;
 }
