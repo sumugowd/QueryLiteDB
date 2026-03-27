@@ -1,28 +1,27 @@
 #include <iostream>
-#include "include/Column.h"
-#include "include/Row.h"
+#include "include/Table.h"
 
 using namespace std;
 
 int main() {
-    cout << "Testing Row and Column..." << endl;
+    cout << "Testing Table..." << endl;
 
-    // Create columns
-    Column col1("id","INT");
-    Column col2("name", "STRING");
+    // Define columns
+    vector<Column> columns = {
+        Column("id", "INT"),
+        Column("name", "STRING"),
+        Column("age", "INT")
+    };
 
-    cout << col1.getName() << " - " << col1.getType() << endl;
-    cout << col2.getName() << " - " << col2.getType() << endl;
+    // Create table
+    Table students("Students", columns);
 
-    // Create row
-    vector<string> values = {"1", "Sumu"};
-    Row row(values);
+    // Insert rows
+    students.insertRow(Row({"1", "Sumu", "22"}));
+    students.insertRow(Row({"2", "Ravi", "23"}));
 
-    cout << "Row Data: ";
-    for(string val : row.getValues()){
-        cout << val << " ";
-    }
-    cout << endl;
+    // Display table
+    students.displayTable();
     
     return 0;
 }
