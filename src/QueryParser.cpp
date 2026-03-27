@@ -1,6 +1,7 @@
 #include "../include/QueryParser.h"
 #include "../include/InsertQuery.h"
 #include "../include/SelectQuery.h"
+#include "../include/DeleteQuery.h"
 #include <iostream>
 
 Query* QueryParser::parse(const vector<string>& tokens){
@@ -27,6 +28,17 @@ Query* QueryParser::parse(const vector<string>& tokens){
 
         // SELECT * FROM table
         query->tableName = tokens[3];
+
+        return query;
+
+    // Delete
+    }else if(tokens[0] == "DELETE"){
+        DeleteQuery* query = new DeleteQuery();
+
+        // DELETE FROM table WHERE column =value
+        query->tableName = tokens[2];
+        query->columnName = tokens[4];
+        query->value = tokens[6];
 
         return query;
     }

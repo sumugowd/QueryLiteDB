@@ -21,6 +21,25 @@ void Table::insertRow(const Row& row){
     rows.push_back(row);
 }
 
+void Table::deleteRows(string columnName, string value){
+    int colIndex = getColumnIndex(columnName);
+
+    if(colIndex == -1){
+        cout << "Error: Column not found!" << endl;
+        return;
+    }
+
+    vector<Row> newRows;
+
+    for(const Row& row : rows){
+        if(row.getValue(colIndex) != value){
+            newRows.push_back(row);
+        }
+    }
+
+    rows = newRows;
+}
+
 //Display all data
 void Table::displayTable() const{
     // Print Column headers

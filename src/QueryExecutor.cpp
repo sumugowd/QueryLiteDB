@@ -2,6 +2,7 @@
 #include "../include/InsertQuery.h"
 #include "../include/FileManager.h"
 #include "../include/SelectQuery.h"
+#include "../include/DeleteQuery.h"
 #include <iostream>
 
 QueryExecutor::QueryExecutor(Database& database) : db(database){}
@@ -35,7 +36,21 @@ void QueryExecutor::execute(Query* query) {
         if(!table) return;
 
         table->displayTable();
-        
+
+    }
+    // Handle DELETE
+    else if(query->type == "DELETE"){
+        DeleteQuery* dq = (DeleteQuery*)query;
+
+        Table* table = db.getTable(dq->tableName);
+        if(!table) return;
+
+        table->deleteRows(dq->columnName, dq->value);
+
+        // Save after delete
+        FileManager::saveTable(*table);
+
+        std::cout << "Delete successful!" << std::endl;
     }else{
         std::cout << "Query type not supported yet!" << std::endl;
     }

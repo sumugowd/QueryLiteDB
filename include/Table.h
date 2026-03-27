@@ -21,6 +21,7 @@ class Table{
         string getName() const;
 
         void insertRow(const Row& row);
+        void deleteRows(string columnName, string value);
         void displayTable() const;
 
         int getColumnIndex(string columnName) const;
