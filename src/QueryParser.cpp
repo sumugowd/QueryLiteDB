@@ -3,13 +3,20 @@
 #include "../include/SelectQuery.h"
 #include "../include/DeleteQuery.h"
 #include "../include/UpdateQuery.h"
+#include "../include/Utils.h"
 #include <iostream>
 
 Query* QueryParser::parse(const vector<string>& tokens){
     if(tokens.empty()) return nullptr;
 
+    // Conver keywords to uppercase
+    vector<string> upperTokens = tokens;
+    for(string &t : upperTokens){
+        t = Utils::toUpper(t);
+    }
+
     // Insert
-    if(tokens[0] == "INSERT"){
+    if(upperTokens[0] == "INSERT"){
         InsertQuery* query = new InsertQuery();
 
         // INSERT INTO table VALUES (...)
@@ -24,7 +31,7 @@ Query* QueryParser::parse(const vector<string>& tokens){
     }
 
     // Select
-    else if(tokens[0] == "SELECT"){
+    else if(upperTokens[0] == "SELECT"){
         SelectQuery* query = new SelectQuery();
 
         // SELECT * FROM table
@@ -33,7 +40,7 @@ Query* QueryParser::parse(const vector<string>& tokens){
         return query;
 
     // Delete
-    }else if(tokens[0] == "DELETE"){
+    }else if(upperTokens[0] == "DELETE"){
         DeleteQuery* query = new DeleteQuery();
 
         // DELETE FROM table WHERE column =value
@@ -43,7 +50,7 @@ Query* QueryParser::parse(const vector<string>& tokens){
 
         return query;
     // Update
-    }else if(tokens[0] == "UPDATE"){
+    }else if(upperTokens[0] == "UPDATE"){
         UpdateQuery* query = new UpdateQuery();
 
         // UPDATE table SET col = val WHERE col = val

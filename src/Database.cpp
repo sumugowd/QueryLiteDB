@@ -1,4 +1,5 @@
 #include "../include/Database.h"
+#include "../include/FileManager.h"
 #include <iostream>
 
 Database::Database() {}
@@ -30,5 +31,20 @@ void Database::showTables() const{
 
     for(const auto& pair : tables){
         cout << "- " << pair.first << endl;
+    }
+}
+
+// table existence check
+bool Database::tableExists(string tableName) const{
+    return tables.find(tableName) != tables.end();
+}
+
+// file load
+void Database::loadTableFromFIle(string tableName){
+    Table table = FileManager::loadTable(tableName);
+    
+    if(table.getName() != ""){
+        tables[tableName] = table;
+        cout << "Loaded table: " << tableName << endl;
     }
 }

@@ -17,6 +17,10 @@ class Database {
         void createTable(string tableName, vector<Column> columns);
         Table* getTable(string tableName);
         void showTables() const;
+
+        bool tableExists(string tableName) const;
+
+        void loadTableFromFIle(string tableName);
 };
 
 #endif
