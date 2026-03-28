@@ -1,4 +1,5 @@
 #include "../include/QueryParser.h"
+#include "../include/CreateQuery.h"
 #include "../include/InsertQuery.h"
 #include "../include/SelectQuery.h"
 #include "../include/DeleteQuery.h"
@@ -59,6 +60,22 @@ Query* QueryParser::parse(const vector<string>& tokens){
         query->setValue = tokens[5];
         query->whereColumn = tokens[7];
         query->whereValue = tokens[9];
+
+        return query;
+    }else if(upperTokens[0] == "CREATE"){
+        // CREATE TABLE (col1, col2, col3)
+        if(tokens.size() < 5){
+            cout << "Invalid CREATE syntax!" << endl;
+            return nullptr;
+        }
+
+        CreateQuery* query = new CreateQuery();
+        query->tableName = tokens[2];
+
+        for(int i = 4; i < tokens.size(); i++){
+            if(tokens[i] == "(" || tokens[i] == ")" || tokens[i] == ",") continue;
+            query->columns.push_back(tokens[i]);
+        }
 
         return query;
     }

@@ -1,6 +1,7 @@
 #include "../include/Database.h"
 #include "../include/FileManager.h"
 #include <iostream>
+#include <filesystem>
 
 Database::Database() {}
 
@@ -23,6 +24,28 @@ Table* Database::getTable(string tableName){
     }
 
     return &tables[tableName];
+}
+
+// load all tables
+namespace fs = std::filesystem;
+
+void Database::loadAllTables(){
+    string folder = "data/";
+
+    for(const auto& entry : fs::directory_iterator(folder)){
+        string filePath = entry.path().string();
+
+        //Extract table name form file
+        string fileName = entry.path().filename().string();
+        string tableName = fileName.substr(0,fileName.find(".txt"));
+
+        Table table = FileManager::loadTable(tableName);
+
+        if(table.getName() != ""){
+            tables[tableName] = table;
+            cout << "Loaded table: " << tableName << endl;
+        }
+    }
 }
 
 // Display all tables

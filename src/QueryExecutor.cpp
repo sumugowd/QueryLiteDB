@@ -1,4 +1,5 @@
 #include "../include/QueryExecutor.h"
+#include "../include/CreateQuery.h"
 #include "../include/InsertQuery.h"
 #include "../include/FileManager.h"
 #include "../include/SelectQuery.h"
@@ -21,6 +22,11 @@ void QueryExecutor::execute(Query* query) {
         Table* table = db.getTable(iq->tableName);
         if(!table) return;
 
+        // Validate column count
+        if(iq->values.size() != table->getColumns().size()){
+            std::cout << "Error: Column count mismatch!" << std::endl;
+            return;
+        }
         table->insertRow(Row(iq->values));
 
         // Save to file after insert
@@ -66,6 +72,25 @@ void QueryExecutor::execute(Query* query) {
         FileManager::saveTable(*table);
 
         std::cout << "Update successful!" << std::endl;
+    }
+    // Handle CREATE
+    else if(query->type == "CREATE"){
+        CreateQuery* cq = (CreateQuery*)query;
+
+        if(db.tableExists(cq->tableName)){
+            cout << "Table already exists!" << endl;
+            return;
+        }
+
+        vector<Column> cols;
+
+        for(string colName : cq->columns){
+            cols.push_back(Column(colName, "STRING"));
+        }
+
+        db.createTable(cq->tableName,cols);
+
+        cout << "Table created successfully!" << endl;
     }
     else{
         std::cout << "Query type not supported yet!" << std::endl;

@@ -18,6 +18,7 @@ class Database {
         Table* getTable(string tableName);
         void showTables() const;
 
+        void loadAllTables();
         bool tableExists(string tableName) const;
 
         void loadTableFromFIle(string tableName);
