@@ -40,6 +40,23 @@ void Table::deleteRows(string columnName, string value){
     rows = newRows;
 }
 
+//Update rows
+void Table::updateRows(string whereColumn, string whereValue, string setColumn, string setValue){
+    int whereIndex = getColumnIndex(whereColumn);
+    int setIndex = getColumnIndex(setColumn);
+
+    if(whereIndex == -1 || setIndex == -1){
+        cout << "Error: Column not found!" << endl;
+        return;
+    }
+
+    for(Row& row : rows){
+        if(row.getValue(whereIndex) == whereValue){
+            row.setValue(setIndex, setValue);
+        }
+    }
+}
+
 //Display all data
 void Table::displayTable() const{
     // Print Column headers

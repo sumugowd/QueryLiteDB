@@ -3,6 +3,7 @@
 #include "../include/FileManager.h"
 #include "../include/SelectQuery.h"
 #include "../include/DeleteQuery.h"
+#include "../include/UpdateQuery.h"
 #include <iostream>
 
 QueryExecutor::QueryExecutor(Database& database) : db(database){}
@@ -51,7 +52,22 @@ void QueryExecutor::execute(Query* query) {
         FileManager::saveTable(*table);
 
         std::cout << "Delete successful!" << std::endl;
-    }else{
+    }
+    // Handle UPDATE
+    else if(query->type == "UPDATE"){
+        UpdateQuery* uq = (UpdateQuery*)query;
+
+        Table* table = db.getTable(uq->tableName);
+        if(!table) return;
+
+        table->updateRows(uq->whereColumn, uq->whereValue, uq->setColumn, uq->setValue);
+
+        // Save after update
+        FileManager::saveTable(*table);
+
+        std::cout << "Update successful!" << std::endl;
+    }
+    else{
         std::cout << "Query type not supported yet!" << std::endl;
     }
 }

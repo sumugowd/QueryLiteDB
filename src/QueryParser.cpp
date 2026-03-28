@@ -2,6 +2,7 @@
 #include "../include/InsertQuery.h"
 #include "../include/SelectQuery.h"
 #include "../include/DeleteQuery.h"
+#include "../include/UpdateQuery.h"
 #include <iostream>
 
 Query* QueryParser::parse(const vector<string>& tokens){
@@ -39,6 +40,18 @@ Query* QueryParser::parse(const vector<string>& tokens){
         query->tableName = tokens[2];
         query->columnName = tokens[4];
         query->value = tokens[6];
+
+        return query;
+    // Update
+    }else if(tokens[0] == "UPDATE"){
+        UpdateQuery* query = new UpdateQuery();
+
+        // UPDATE table SET col = val WHERE col = val
+        query->tableName = tokens[1];
+        query->setColumn = tokens[3];
+        query->setValue = tokens[5];
+        query->whereColumn = tokens[7];
+        query->whereValue = tokens[9];
 
         return query;
     }
